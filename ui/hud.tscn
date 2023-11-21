@@ -1,6 +1,7 @@
-[gd_scene load_steps=7 format=3 uid="uid://b3brejja2rris"]
+[gd_scene load_steps=8 format=3 uid="uid://b3brejja2rris"]
 
 [ext_resource type="FontFile" uid="uid://nr8r8dsme4kg" path="res://assets/kenvector_future_thin.ttf" id="1_ns7iy"]
+[ext_resource type="Script" path="res://ui/hud.gd" id="1_uiq6a"]
 [ext_resource type="Texture2D" uid="uid://iohfhhobbrao" path="res://assets/player_small.png" id="2_48hex"]
 [ext_resource type="Texture2D" uid="uid://dj250gjm3jyl" path="res://assets/play_button.png" id="3_mag1k"]
 [ext_resource type="Texture2D" uid="uid://c7h564witap0l" path="res://assets/play_button_h.png" id="4_pu40n"]
@@ -14,6 +15,7 @@ font = ExtResource("1_ns7iy")
 font_size = 64
 
 [node name="HUD" type="CanvasLayer"]
+script = ExtResource("1_uiq6a")
 
 [node name="Timer" type="Timer" parent="."]
 wait_time = 2.0
@@ -78,3 +80,6 @@ layout_mode = 2
 size_flags_horizontal = 4
 texture_normal = ExtResource("3_mag1k")
 texture_hover = ExtResource("4_pu40n")
+
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]
+[connection signal="pressed" from="VBoxContainer/StartButton" to="." method="_on_start_button_pressed"]
