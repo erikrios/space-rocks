@@ -18,17 +18,31 @@ var state := PlayerState.INIT
 
 signal lives_changed
 signal dead
+signal shield_changed
 
 var reset_pos := false
 var lives := 0: set = set_lives
 
-func set_lives(value: int):
+@export var max_shield := 100.0
+@export var shield_regen := 5.0
+var shield := 0: set = set_shield
+
+func set_lives(value: int) -> void:
 	lives = value
 	lives_changed.emit(lives)
 	if lives <= 0:
 		change_state(PlayerState.DEAD)
 	else:
 		change_state(PlayerState.INVULNERABLE)
+	shield = max_shield
+		
+func set_shield(value: int) -> void:
+	value = min(value, max_shield)
+	shield = value
+	shield_changed.emit(shield / max_shield)
+	if shield <= 0:
+		lives -= 1
+		explode()
 
 func _ready() -> void:
 	change_state(PlayerState.ALIVE)
@@ -37,6 +51,7 @@ func _ready() -> void:
 	
 func _process(delta: float) -> void:
 	get_input()
+	shield += shield_regen * delta
 	
 func _physics_process(delta: float) -> void:
 	constant_force = thrust
@@ -111,6 +126,5 @@ func _on_invulnerability_timer_timeout() -> void:
 
 func _on_body_entered(body: Node) -> void:
 	if body.is_in_group("rocks"):
+		shield -= body.size * 25
 		body.explode()
-		lives -= 1
-		explode()
