@@ -83,14 +83,21 @@ func change_state(new_state: PlayerState) -> void:
 			$Sprite2D.hide()
 			linear_velocity = Vector2.ZERO
 			dead.emit()
+			$EngineSound.stop()
 	state = new_state
 
 func get_input() -> void:
+	$Exhaust.emitting = false
 	thrust = Vector2.ZERO
 	if state in [PlayerState.DEAD, PlayerState.INIT]:
 		return
 	if Input.is_action_pressed("thrust"):
+		$Exhaust.emitting = true
 		thrust = transform.x * engine_power
+		if not $EngineSound.playing:
+			$EngineSound.play()
+	else:
+		$EngineSound.stop()
 	rotation_dir = Input.get_axis("rotate_left", "rotate_right")
 	if Input.is_action_pressed("shoot") and can_shoot:
 		shoot()
@@ -103,6 +110,7 @@ func shoot() -> void:
 	var b := bullet_scene.instantiate()
 	get_tree().root.add_child(b)
 	b.start($Muzzle.global_transform)
+	$LaserSound.play()
 
 func reset() -> void:
 	reset_pos = true

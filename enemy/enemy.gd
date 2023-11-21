@@ -25,6 +25,7 @@ func _physics_process(delta: float) -> void:
 		queue_free()
 		
 func shoot() -> void:
+	$ShootSound.play()
 	var dir = global_position.direction_to(target.global_position)
 	dir = dir.rotated(randf_range(-bullet_spread, bullet_spread))
 	var b := bullet_scene.instantiate()
@@ -43,6 +44,7 @@ func take_damage(amount: int) -> void:
 		explode()
 
 func explode() -> void:
+	$ExplosionSound.play()
 	speed = 0
 	$GunCooldown.stop()
 	$CollisionShape2D.set_deferred("disabled", true)
@@ -54,7 +56,6 @@ func explode() -> void:
 	
 func _on_gun_cooldown_timeout() -> void:
 	shoot_pulse(3, 0.15)
-
 
 func _on_body_entered(body: Node2D) -> void:
 	if body.is_in_group("rocks"):

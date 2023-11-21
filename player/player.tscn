@@ -1,12 +1,21 @@
-[gd_scene load_steps=6 format=3 uid="uid://3hacrxvo7jjc"]
+[gd_scene load_steps=10 format=3 uid="uid://3hacrxvo7jjc"]
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_3mavk"]
 [ext_resource type="Texture2D" uid="uid://2wxg614nn0cs" path="res://assets/player_ship.png" id="1_w5k8j"]
 [ext_resource type="PackedScene" uid="uid://twhg6wqi5wx5" path="res://player/bullet.tscn" id="2_mj7ad"]
 [ext_resource type="PackedScene" uid="uid://k6crmue5cg2b" path="res://object/explosion.tscn" id="4_2un8d"]
+[ext_resource type="AudioStream" uid="uid://d4n14l6jdtphb" path="res://assets/sounds/laser.ogg" id="5_6yif4"]
+[ext_resource type="AudioStream" uid="uid://cbxtivkv4wh7w" path="res://assets/sounds/engine.ogg" id="6_mwkd0"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_slt7c"]
 radius = 31.0
+
+[sub_resource type="Curve" id="Curve_okemq"]
+_data = [Vector2(0.00549451, 1), 0.0, 0.0, 0, 0, Vector2(1, 0.168421), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_u0jv3"]
+colors = PackedColorArray(1, 0.6, 0, 1, 0.803922, 0, 0, 1)
 
 [node name="Player" type="RigidBody2D"]
 max_contacts_reported = 1
@@ -37,6 +46,28 @@ visible = false
 [node name="InvulnerabilityTimer" type="Timer" parent="."]
 wait_time = 2.0
 one_shot = true
+
+[node name="LaserSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("5_6yif4")
+
+[node name="EngineSound" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("6_mwkd0")
+
+[node name="Exhaust" type="CPUParticles2D" parent="."]
+show_behind_parent = true
+position = Vector2(-28, 0)
+rotation = 3.14159
+amount = 25
+lifetime = 0.1
+local_coords = true
+emission_shape = 3
+emission_rect_extents = Vector2(1, 5)
+spread = 0.0
+gravity = Vector2(0, 0)
+initial_velocity_max = 400.0
+scale_amount_max = 8.0
+scale_amount_curve = SubResource("Curve_okemq")
+color_ramp = SubResource("Gradient_u0jv3")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="timeout" from="GunCooldown" to="." method="_on_gun_cooldown_timeout"]

@@ -1,10 +1,13 @@
-[gd_scene load_steps=10 format=3 uid="uid://dhgwp4h3jfull"]
+[gd_scene load_steps=15 format=3 uid="uid://dhgwp4h3jfull"]
 
 [ext_resource type="Texture2D" uid="uid://5ni1nosnrbup" path="res://assets/enemy_saucer.png" id="1_gv7nh"]
 [ext_resource type="Script" path="res://enemy/enemy.gd" id="1_sr5yq"]
 [ext_resource type="PackedScene" uid="uid://dtu078h0xxayi" path="res://enemy/enemy_bullet.tscn" id="2_2kqlm"]
 [ext_resource type="PackedScene" uid="uid://bd402l1os02ub" path="res://enemy/enemy_paths.tscn" id="2_aosfg"]
 [ext_resource type="PackedScene" uid="uid://k6crmue5cg2b" path="res://object/explosion.tscn" id="3_pjy7a"]
+[ext_resource type="AudioStream" uid="uid://cmadv4cpmgxr2" path="res://assets/sounds/explosion.wav" id="6_ij1kk"]
+[ext_resource type="AudioStream" uid="uid://4ca0tcrlkbqd" path="res://assets/sounds/enemy_laser.wav" id="7_gsc3m"]
+[ext_resource type="Texture2D" uid="uid://xakedu5j1y40" path="res://assets/corona.png" id="8_aiinq"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_dgusi"]
 radius = 37.0135
@@ -47,6 +50,13 @@ _data = {
 "flash": SubResource("Animation_eg5o8")
 }
 
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_rr7xe"]
+blend_mode = 1
+
+[sub_resource type="Curve" id="Curve_fu6e8"]
+_data = [Vector2(0.0494506, 1), 0.0, 0.0, 0, 0, Vector2(0.978022, 0.0842105), 0.0, 0.0, 0, 0]
+point_count = 2
+
 [node name="Enemy" type="Area2D" groups=["enemies"]]
 script = ExtResource("1_sr5yq")
 bullet_scene = ExtResource("2_2kqlm")
@@ -71,6 +81,24 @@ visible = false
 [node name="GunCooldown" type="Timer" parent="."]
 wait_time = 1.5
 autostart = true
+
+[node name="ExplosionSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("6_ij1kk")
+
+[node name="ShootSound" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_gsc3m")
+
+[node name="CPUParticles2D" type="CPUParticles2D" parent="."]
+show_behind_parent = true
+material = SubResource("CanvasItemMaterial_rr7xe")
+amount = 20
+texture = ExtResource("8_aiinq")
+emission_shape = 1
+emission_sphere_radius = 25.0
+gravity = Vector2(0, 0)
+scale_amount_min = 0.1
+scale_amount_max = 0.1
+scale_amount_curve = SubResource("Curve_fu6e8")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="timeout" from="GunCooldown" to="." method="_on_gun_cooldown_timeout"]
