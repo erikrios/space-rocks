@@ -1,5 +1,7 @@
 extends CanvasLayer
 
+class_name HUD 
+
 signal start_game
 
 @onready var lives_counter := $MarginContainer/HBoxContainer/LivesCounter.get_children()

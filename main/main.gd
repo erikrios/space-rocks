@@ -52,7 +52,7 @@ func new_game() -> void:
 
 func new_level() -> void:
 	level += 1
-	$HUD.show_message("Wave %s" % level)
+	($HUD as HUD).show_message("Wave %s" % level)
 	for i in level:
 		spawn_rock(3)
 
