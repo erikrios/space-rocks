@@ -32,5 +32,6 @@ position = Vector2(8, 8)
 
 [node name="HUD" parent="." instance=ExtResource("5_b13u8")]
 
+[connection signal="dead" from="Player" to="." method="game_over"]
 [connection signal="lives_changed" from="Player" to="HUD" method="update_lives"]
 [connection signal="start_game" from="HUD" to="." method="new_game"]

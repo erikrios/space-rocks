@@ -1,13 +1,16 @@
-[gd_scene load_steps=5 format=3 uid="uid://3hacrxvo7jjc"]
+[gd_scene load_steps=6 format=3 uid="uid://3hacrxvo7jjc"]
 
 [ext_resource type="Script" path="res://player/player.gd" id="1_3mavk"]
 [ext_resource type="Texture2D" uid="uid://2wxg614nn0cs" path="res://assets/player_ship.png" id="1_w5k8j"]
 [ext_resource type="PackedScene" uid="uid://twhg6wqi5wx5" path="res://player/bullet.tscn" id="2_mj7ad"]
+[ext_resource type="PackedScene" uid="uid://k6crmue5cg2b" path="res://object/explosion.tscn" id="4_2un8d"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_slt7c"]
 radius = 31.0
 
 [node name="Player" type="RigidBody2D"]
+max_contacts_reported = 1
+contact_monitor = true
 linear_damp = 1.0
 angular_damp = 5.0
 script = ExtResource("1_3mavk")
@@ -28,4 +31,13 @@ position = Vector2(50, 0)
 one_shot = true
 autostart = true
 
+[node name="Explosion" parent="." instance=ExtResource("4_2un8d")]
+visible = false
+
+[node name="InvulnerabilityTimer" type="Timer" parent="."]
+wait_time = 2.0
+one_shot = true
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
 [connection signal="timeout" from="GunCooldown" to="." method="_on_gun_cooldown_timeout"]
+[connection signal="timeout" from="InvulnerabilityTimer" to="." method="_on_invulnerability_timer_timeout"]
