@@ -1,6 +1,7 @@
 extends Node
 
 @export var rock_scene: PackedScene
+@export var enemy_scene: PackedScene
 
 var screensize = Vector2.ZERO
 
@@ -55,6 +56,7 @@ func new_level() -> void:
 	($HUD as HUD).show_message("Wave %s" % level)
 	for i in level:
 		spawn_rock(3)
+	$EnemyTimer.start(randf_range(5, 10))
 
 func game_over() -> void:
 	playing = false
@@ -72,3 +74,10 @@ func _input(event: InputEvent) -> void:
 		else:
 			message.text = ""
 			message.hide()
+
+
+func _on_enemy_timer_timeout() -> void:
+	var e := enemy_scene.instantiate()
+	add_child(e)
+	e.target = $Player
+	$EnemyTimer.start(randf_range(20, 40))
